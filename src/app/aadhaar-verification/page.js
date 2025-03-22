@@ -40,8 +40,8 @@ export default function AadhaarVerification() {
       return;
     }
 
-    // If OTP validation passes, proceed to UPI setup
-    router.push('/upi-setup');
+    // If OTP validation passes, proceed to round-up setup
+    router.push('/round-up-setup');
   };
 
   // Format Aadhaar number with spaces
