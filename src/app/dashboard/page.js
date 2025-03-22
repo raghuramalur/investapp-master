@@ -1,10 +1,17 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 export default function Dashboard() {
-  // This would normally come from your auth/session management
-  const userName = "Raghu"; // Example name, should come from signup
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    // Get the name from localStorage when component mounts
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#121212] text-white p-8">
@@ -15,7 +22,7 @@ export default function Dashboard() {
 
       {/* Main content */}
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-2xl text-gray-300 mb-4">Hello, {userName}</h2>
+        {userName && <h2 className="text-2xl text-gray-300 mb-4">Hello, {userName}</h2>}
         <h1 className="text-5xl font-bold mb-12">Your<br />Investments</h1>
 
         {/* Investment Summary Card */}

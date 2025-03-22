@@ -11,7 +11,9 @@ export default function Welcome() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (firstName && lastName) {
-      router.push('/dashboard'); // You'll need to create this page next
+      // Store the name in localStorage
+      localStorage.setItem('userName', firstName);
+      router.push('/dashboard');
     }
   };
 
