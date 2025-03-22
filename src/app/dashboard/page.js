@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [userName, setUserName] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     // Get the name from localStorage when component mounts
@@ -102,7 +104,10 @@ export default function Dashboard() {
         </div>
 
         {/* Complete Activation Button */}
-        <button className="w-full bg-[#ADFF2F] text-black py-4 rounded-xl text-xl font-medium hover:bg-[#9AE52E] transition-all duration-200">
+        <button 
+          onClick={() => router.push('/activation')}
+          className="w-full bg-[#ADFF2F] text-black py-4 rounded-xl text-xl font-medium hover:bg-[#9AE52E] transition-all duration-200"
+        >
           Complete Activation
         </button>
       </div>
