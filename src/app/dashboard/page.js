@@ -5,14 +5,17 @@ import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [userName, setUserName] = useState('');
+  const [isUPISetup, setIsUPISetup] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // Get the name from localStorage when component mounts
-    const storedName = localStorage.getItem('userName');
-    if (storedName) {
-      setUserName(storedName);
-    }
+    // Get user name from localStorage
+    const storedName = localStorage.getItem('userName') || '';
+    setUserName(storedName);
+
+    // Check if UPI setup is complete
+    const upiSetupComplete = localStorage.getItem('upiSetupComplete') === 'true';
+    setIsUPISetup(upiSetupComplete);
   }, []);
 
   return (
@@ -103,13 +106,19 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Complete Activation Button */}
-        <button 
-          onClick={() => router.push('/activation')}
-          className="w-full bg-[#4A4A8A] text-white py-4 rounded-xl text-xl font-medium hover:bg-[#5A5A9A] transition-all duration-200"
-        >
-          Complete Activation
-        </button>
+        {/* Complete Activation Button - Only show if UPI is not set up */}
+        {!isUPISetup && (
+          <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#121212] to-transparent">
+            <div className="max-w-2xl mx-auto">
+              <button 
+                onClick={() => router.push('/activation')}
+                className="w-full bg-[#4A4A8A] text-white py-4 rounded-xl text-xl font-medium hover:bg-[#5A5A9A] transition-all duration-200"
+              >
+                Complete Activation
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
