@@ -37,6 +37,15 @@ export default function Dashboard() {
       }
     },
     {
+      icon: '📊',
+      label: 'Transactions',
+      onClick: () => {
+        setShowMenu(false);
+        router.push('/transactions');
+      },
+      subtext: 'View your investment history'
+    },
+    {
       icon: '👥',
       label: 'Share With Friends',
       subtext: 'Earn rewards'
