@@ -12,12 +12,38 @@ export default function RoundUpSetup() {
     router.push('/upi-setup');
   };
 
-  // Example transactions to show how round-up works
-  const exampleTransactions = [
-    { amount: 45, roundUp: 5 },
-    { amount: 132, roundUp: 8 },
-    { amount: 99, roundUp: 1 },
-  ];
+  // Generate dynamic examples based on selected round-up amount
+  const getExampleTransactions = (amount) => {
+    const numAmount = parseInt(amount);
+    switch(numAmount) {
+      case 5:
+        return [
+          { amount: 43, roundUp: 2 },
+          { amount: 156, roundUp: 4 },
+          { amount: 95, roundUp: 5 },
+        ];
+      case 10:
+        return [
+          { amount: 82, roundUp: 8 },
+          { amount: 195, roundUp: 5 },
+          { amount: 144, roundUp: 6 },
+        ];
+      case 50:
+        return [
+          { amount: 276, roundUp: 24 },
+          { amount: 430, roundUp: 20 },
+          { amount: 168, roundUp: 32 },
+        ];
+      case 100:
+        return [
+          { amount: 445, roundUp: 55 },
+          { amount: 720, roundUp: 80 },
+          { amount: 834, roundUp: 66 },
+        ];
+      default:
+        return [];
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
@@ -47,29 +73,11 @@ export default function RoundUpSetup() {
           </p>
         </div>
 
-        <div className="mb-8 p-6 bg-[#1E1E1E] rounded-xl">
-          <h2 className="text-2xl font-semibold mb-4">How it works</h2>
-          <div className="space-y-4">
-            {exampleTransactions.map((tx, index) => (
-              <div key={index} className="flex justify-between items-center text-lg">
-                <span className="text-gray-400">₹{tx.amount}</span>
-                <span className="text-purple-400">+₹{tx.roundUp}</span>
-                <span>₹{tx.amount + tx.roundUp}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 pt-6 border-t border-gray-800">
-            <p className="text-gray-400">
-              We'll round up your transactions to the nearest ₹{roundUpAmount} and invest the difference.
-            </p>
-          </div>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-6">
             <label className="block text-xl text-gray-300">Round up to nearest</label>
-            <div className="grid grid-cols-3 gap-4">
-              {['5', '10', '20'].map((amount) => (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {['5', '10', '50', '100'].map((amount) => (
                 <button
                   key={amount}
                   type="button"
@@ -82,6 +90,25 @@ export default function RoundUpSetup() {
                 >
                   ₹{amount}
                 </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-8 p-6 bg-[#1E1E1E] rounded-xl">
+            <h2 className="text-2xl font-semibold mb-4">How it works</h2>
+            <p className="text-gray-400 mb-6">
+              When you spend, we'll round up to the nearest ₹{roundUpAmount} and invest the difference:
+            </p>
+            <div className="space-y-4">
+              {getExampleTransactions(roundUpAmount).map((tx, index) => (
+                <div key={index} className="flex justify-between items-center text-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-400">You spend ₹{tx.amount}</span>
+                    <span className="text-gray-600">→</span>
+                    <span>Rounded to ₹{tx.amount + tx.roundUp}</span>
+                  </div>
+                  <span className="text-purple-400">+₹{tx.roundUp} invested</span>
+                </div>
               ))}
             </div>
           </div>
