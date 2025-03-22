@@ -25,6 +25,11 @@ export default function LumpSum() {
       const currentInvested = parseInt(localStorage.getItem('investedAmount') || '0');
       localStorage.setItem('investedAmount', (currentInvested + parseInt(amount)).toString());
       
+      // Award XP for investment (1 XP per ₹10 invested)
+      const xpEarned = Math.floor(parseInt(amount) / 10);
+      const currentXp = parseInt(localStorage.getItem('userXp') || '0');
+      localStorage.setItem('userXp', (currentXp + xpEarned).toString());
+      
       // Play success sound
       try {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -72,7 +77,8 @@ export default function LumpSum() {
             </div>
           </div>
           <h2 className="text-3xl font-bold mb-4">Investment Added!</h2>
-          <p className="text-gray-400">₹{amount} will be added to your investments</p>
+          <p className="text-gray-400 mb-2">₹{amount} will be added to your investments</p>
+          <p className="text-yellow-400">+{Math.floor(parseInt(amount) / 10)} XP</p>
         </div>
       </div>
     );

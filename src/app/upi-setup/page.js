@@ -7,6 +7,7 @@ export default function UPISetup() {
   const [upiId, setUpiId] = useState('');
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const router = useRouter();
 
   const validateUPI = (upi) => {
@@ -15,31 +16,48 @@ export default function UPISetup() {
     return upiRegex.test(upi);
   };
 
-  const playSuccessSound = () => {
+  const handleSetupComplete = async () => {
+    setProcessing(true);
     try {
-      // Create a simple success sound using Web Audio API instead of loading a file
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Create oscillator for the success sound
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
+      // Update UPI setup status in localStorage
+      localStorage.setItem('isUPISetup', 'true');
+      localStorage.setItem('upiId', upiId);
+
+      // Award XP for completing activation
+      const currentXp = parseInt(localStorage.getItem('userXp') || '0');
+      localStorage.setItem('userXp', (currentXp + 500).toString());
       
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      // Configure the success sound
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Start at 800Hz
-      oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1); // Sweep to 1200Hz
-      
-      gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-      gainNode.gain.exponentialRampToTimeValueAtTime(0.01, audioContext.currentTime + 0.2);
-      
-      // Play the sound
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + 0.2);
+      // Play success sound
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToTimeValueAtTime(0.01, audioContext.currentTime + 0.2);
+        
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.2);
+      } catch (error) {
+        console.log('Audio playback failed:', error);
+      }
+
+      setShowSuccess(true);
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 2000);
     } catch (error) {
-      console.log('Audio playback failed:', error);
-      // Continue with the success flow even if sound fails
+      setProcessing(false);
+      // Handle error
     }
   };
 
@@ -52,23 +70,7 @@ export default function UPISetup() {
       return;
     }
 
-    // In a real app, this would make an API call to set up UPI auto-pay
-    try {
-      // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      // Store UPI setup status
-      localStorage.setItem('upiSetupComplete', 'true');
-      localStorage.setItem('upiId', upiId);
-      setShowSuccess(true);
-      // Play success sound
-      playSuccessSound();
-      // Redirect after animation
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
-    } catch (err) {
-      setError('Failed to set up UPI auto-pay. Please try again.');
-    }
+    await handleSetupComplete();
   };
 
   if (showSuccess) {

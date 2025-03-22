@@ -7,12 +7,16 @@ export default function Dashboard() {
   const [userName, setUserName] = useState('');
   const [isUPISetup, setIsUPISetup] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [xp, setXp] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
     // Get user name from localStorage
     const storedName = localStorage.getItem('userName') || '';
+    const userXp = parseInt(localStorage.getItem('userXp') || '0');
     setUserName(storedName);
+    setXp(userXp);
 
     // Check if UPI setup is complete
     const upiSetupComplete = localStorage.getItem('upiSetupComplete') === 'true';
@@ -84,23 +88,133 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#121212] text-white relative">
       {/* Header with Menu Icon */}
-      <div className="w-full px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#2A2A2A] rounded-full flex items-center justify-center">
-            <span className="text-2xl">D</span>
+      <div className="w-full px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setShowProfile(true)}
+              className="w-12 h-12 bg-[#2A2A2A] rounded-full flex items-center justify-center text-xl font-medium hover:bg-[#3A3A3A] transition-colors duration-200"
+            >
+              {userName ? userName[0].toUpperCase() : 'U'}
+            </button>
+            <div>
+              <div className="text-xl font-medium mb-1">Hello, {userName}</div>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center bg-[#2A2A2A] rounded-full px-3 py-1.5">
+                  <div className="w-4 h-4 mr-2">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
+                        fill="#FFD700" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <span className="text-yellow-400 text-sm font-medium">{xp.toLocaleString()} XP</span>
+                </div>
+                <div className="text-xs text-gray-400">Level {Math.floor(xp/1000) + 1}</div>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-gray-400">Hello!</p>
-            <p className="font-semibold">{userName || 'User'}</p>
-          </div>
+          <button 
+            onClick={() => setShowMenu(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors duration-200"
+          >
+            <span className="text-xl">☰</span>
+          </button>
         </div>
-        <button 
-          onClick={() => setShowMenu(true)}
-          className="text-2xl hover:text-gray-300 transition-colors duration-200"
-        >
-          ☰
-        </button>
       </div>
+
+      {/* Profile Details Modal */}
+      {showProfile && (
+        <>
+          {/* Overlay */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setShowProfile(false)}
+          />
+          
+          {/* Profile Modal */}
+          <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-[#1A1A1A] rounded-2xl z-50 overflow-hidden">
+            {/* Profile Header */}
+            <div className="relative h-32 bg-gradient-to-r from-purple-500 to-blue-500">
+              <button 
+                onClick={() => setShowProfile(false)}
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 transition-all duration-200"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Profile Avatar */}
+            <div className="relative -mt-12 px-6">
+              <div className="w-24 h-24 bg-[#2A2A2A] rounded-full flex items-center justify-center text-3xl font-medium border-4 border-[#1A1A1A]">
+                {userName ? userName[0].toUpperCase() : 'U'}
+              </div>
+            </div>
+
+            {/* Profile Content */}
+            <div className="p-6">
+              <h2 className="text-2xl font-bold mb-1">{userName}</h2>
+              <p className="text-gray-400 mb-6">Member since March 2024</p>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="bg-[#2A2A2A] rounded-xl p-4 text-center">
+                  <div className="text-yellow-400 text-xl font-bold mb-1">{xp.toLocaleString()}</div>
+                  <div className="text-xs text-gray-400">XP Points</div>
+                </div>
+                <div className="bg-[#2A2A2A] rounded-xl p-4 text-center">
+                  <div className="text-purple-400 text-xl font-bold mb-1">{Math.floor(xp/1000) + 1}</div>
+                  <div className="text-xs text-gray-400">Level</div>
+                </div>
+                <div className="bg-[#2A2A2A] rounded-xl p-4 text-center">
+                  <div className="text-green-400 text-xl font-bold mb-1">156</div>
+                  <div className="text-xs text-gray-400">Investments</div>
+                </div>
+              </div>
+
+              {/* Progress to Next Level */}
+              <div className="mb-6">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-gray-400">Progress to Level {Math.floor(xp/1000) + 2}</span>
+                  <span className="text-gray-400">{xp % 1000}/1000 XP</span>
+                </div>
+                <div className="h-2 bg-[#2A2A2A] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"
+                    style={{ width: `${(xp % 1000) / 10}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Account Details */}
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">UPI ID</div>
+                  <div>{localStorage.getItem('upiId') || 'Not set up'}</div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Phone</div>
+                  <div>{localStorage.getItem('phoneNumber') || 'Not available'}</div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Email</div>
+                  <div>{localStorage.getItem('email') || 'Not available'}</div>
+                </div>
+              </div>
+
+              {/* Edit Profile Button */}
+              <button 
+                onClick={() => {
+                  setShowProfile(false);
+                  router.push('/settings');
+                }}
+                className="w-full mt-6 bg-[#2A2A2A] text-white py-3 rounded-xl font-medium hover:bg-[#3A3A3A] transition-all duration-200"
+              >
+                Edit Profile
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Menu Sidebar */}
       {showMenu && (
