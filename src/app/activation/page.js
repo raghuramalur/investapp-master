@@ -7,16 +7,16 @@ export default function Activation() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white p-6">
+    <div className="min-h-screen bg-[#121212] text-white p-6 flex items-center justify-center">
       {/* Main Card */}
-      <div className="bg-[#1E1E1E] rounded-3xl p-8 flex flex-col items-center max-w-xl mx-auto mt-12">
+      <div className="bg-[#1E1E1E] rounded-2xl p-12 flex flex-col items-center w-full max-w-3xl mx-auto">
         {/* Logo */}
-        <div className="w-32 h-32 mb-12">
+        <div className="w-24 h-24 mb-10">
           <Image
             src={logo}
             alt="Dime.On Logo"
-            width={128}
-            height={128}
+            width={96}
+            height={96}
             className="w-full h-full object-contain"
           />
         </div>
@@ -26,8 +26,8 @@ export default function Activation() {
         </h1>
 
         {/* Steps */}
-        <div className="space-y-12 w-full text-center mb-12">
-          <div>
+        <div className="grid md:grid-cols-2 gap-12 w-full mb-12">
+          <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">
               Step 1 - Account Setup
             </h2>
@@ -38,7 +38,7 @@ export default function Activation() {
             </p>
           </div>
 
-          <div>
+          <div className="text-center">
             <h2 className="text-2xl font-semibold mb-2">
               Step 2 - Automatic Investing
             </h2>
@@ -52,7 +52,7 @@ export default function Activation() {
         {/* Start Investing Button */}
         <button 
           onClick={() => router.push('/account-setup')}
-          className="w-full bg-[#4A4A8A] text-white py-4 rounded-full text-xl font-medium hover:bg-[#5A5A9A] transition-all duration-200"
+          className="w-full max-w-md bg-[#4A4A8A] text-white py-4 rounded-full text-xl font-medium hover:bg-[#5A5A9A] transition-all duration-200"
         >
           Start Investing
         </button>

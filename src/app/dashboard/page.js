@@ -106,7 +106,7 @@ export default function Dashboard() {
         {/* Complete Activation Button */}
         <button 
           onClick={() => router.push('/activation')}
-          className="w-full bg-[#ADFF2F] text-black py-4 rounded-xl text-xl font-medium hover:bg-[#9AE52E] transition-all duration-200"
+          className="w-full bg-[#4A4A8A] text-white py-4 rounded-xl text-xl font-medium hover:bg-[#5A5A9A] transition-all duration-200"
         >
           Complete Activation
         </button>
