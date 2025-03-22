@@ -11,8 +11,13 @@ export default function Welcome() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (firstName && lastName) {
-      // Store the name in localStorage
+      // Clear all previous user data
+      localStorage.clear();
+      
+      // Store new user data
       localStorage.setItem('userName', firstName);
+      localStorage.setItem('upiSetupComplete', 'false'); // Explicitly set UPI setup as incomplete
+      
       router.push('/dashboard');
     }
   };

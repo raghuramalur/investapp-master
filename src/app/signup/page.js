@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -7,11 +7,17 @@ export default function SignUp() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    // Clear all previous user data when someone starts signing up
+    localStorage.clear();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would typically make an API call to send OTP
     // For now, we'll just navigate to the verify page
     if (phoneNumber.length === 10) {
+      localStorage.setItem('phoneNumber', phoneNumber);
       router.push('/verify');
     }
   };
