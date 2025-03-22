@@ -20,19 +20,56 @@ export default function Dashboard() {
   }, []);
 
   const menuItems = [
-    { 
-      icon: '💰', 
-      label: 'Invest More', 
-      subtext: 'Meet your goals faster',
-      onClick: () => router.push('/invest-more')
+    {
+      icon: '💰',
+      label: 'Invest More',
+      onClick: () => {
+        setShowMenu(false);
+        router.push('/invest-more');
+      }
     },
-    { icon: '↩️', label: 'Withdraw', subtext: 'Or just stay invested!' },
-    { icon: '👥', label: 'Share With Friends', subtext: 'Earn rewards' },
-    { icon: '🎧', label: 'Support', subtext: 'Ask, connect, explore' },
-    { icon: '🔔', label: 'Notifications', subtext: '4 new notifications', highlight: true },
-    { icon: '⚙️', label: 'Settings', subtext: 'Make Dime.On yours' },
-    { icon: '📚', label: 'Wise Up', subtext: 'Tips, tricks & more!' },
-    { icon: '❓', label: 'FAQ', subtext: 'Qs from users like you!' },
+    {
+      icon: '↓',
+      label: 'Withdraw Funds',
+      onClick: () => {
+        setShowMenu(false);
+        router.push('/withdraw');
+      }
+    },
+    {
+      icon: '👥',
+      label: 'Share With Friends',
+      subtext: 'Earn rewards'
+    },
+    {
+      icon: '🎧',
+      label: 'Support',
+      subtext: 'Ask, connect, explore'
+    },
+    {
+      icon: '🔔',
+      label: 'Notifications',
+      subtext: '4 new notifications',
+      highlight: true
+    },
+    {
+      icon: '⚙️',
+      label: 'Settings',
+      onClick: () => {
+        setShowMenu(false);
+        router.push('/settings');
+      }
+    },
+    {
+      icon: '📚',
+      label: 'Wise Up',
+      subtext: 'Tips, tricks & more!'
+    },
+    {
+      icon: '❓',
+      label: 'FAQ',
+      subtext: 'Qs from users like you!'
+    }
   ];
 
   return (
