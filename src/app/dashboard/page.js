@@ -20,7 +20,12 @@ export default function Dashboard() {
   }, []);
 
   const menuItems = [
-    { icon: '💰', label: 'Invest More', subtext: 'Meet your goals faster' },
+    { 
+      icon: '💰', 
+      label: 'Invest More', 
+      subtext: 'Meet your goals faster',
+      onClick: () => router.push('/invest-more')
+    },
     { icon: '↩️', label: 'Withdraw', subtext: 'Or just stay invested!' },
     { icon: '👥', label: 'Share With Friends', subtext: 'Earn rewards' },
     { icon: '🎧', label: 'Support', subtext: 'Ask, connect, explore' },
@@ -83,7 +88,7 @@ export default function Dashboard() {
                   key={index}
                   onClick={() => {
                     setShowMenu(false);
-                    // Add navigation logic here
+                    item.onClick && item.onClick();
                   }}
                   className="w-full p-4 flex items-start gap-4 hover:bg-[#2A2A2A] rounded-xl transition-colors duration-200"
                 >
