@@ -6,21 +6,49 @@ export default function AccountSetup() {
   const [pan, setPan] = useState('');
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
+
+  const validatePAN = (pan) => {
+    // PAN format: ABCDE1234F
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    return panRegex.test(pan);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add validation and API calls here
-    router.push('/upi-setup'); // Next step would be UPI setup
+    setError('');
+
+    if (!validatePAN(pan)) {
+      setError('Please enter a valid PAN number');
+      return;
+    }
+
+    if (!dob) {
+      setError('Please enter your date of birth');
+      return;
+    }
+
+    if (!gender) {
+      setError('Please select your gender');
+      return;
+    }
+
+    // If all validations pass, proceed to Aadhaar verification
+    router.push('/aadhaar-verification');
   };
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
       {/* Header */}
-      <div className="max-w-2xl mx-auto px-6">
-        <div className="flex justify-between items-center h-16">
-          <button onClick={() => router.back()} className="text-2xl">←</button>
-          <button className="text-2xl">☰</button>
+      <div className="w-full px-6">
+        <div className="h-16 flex items-center">
+          <button 
+            onClick={() => router.back()} 
+            className="text-2xl hover:text-gray-300 transition-colors duration-200"
+          >
+            ←
+          </button>
         </div>
       </div>
 
@@ -37,6 +65,12 @@ export default function AccountSetup() {
             Enter and verify PAN to secure your details.
           </p>
         </div>
+
+        {error && (
+          <div className="mb-6 p-4 bg-red-900/50 border border-red-500 rounded-xl text-red-200">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* PAN Input */}

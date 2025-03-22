@@ -11,12 +11,12 @@ export default function Activation() {
       {/* Main Card */}
       <div className="bg-[#1E1E1E] rounded-2xl p-12 flex flex-col items-center w-full max-w-3xl mx-auto">
         {/* Logo */}
-        <div className="w-24 h-24 mb-10">
+        <div className="w-48 h-48 mb-12">
           <Image
             src={logo}
             alt="Dime.On Logo"
-            width={96}
-            height={96}
+            width={192}
+            height={192}
             className="w-full h-full object-contain"
           />
         </div>
