@@ -2,12 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../assets/logo.png";
-import { useState, useEffect } from "react";
 
 export default function About() {
-  // Example streak data (in a real app, this would come from your backend)
-  const [streak, setStreak] = useState(7); // Example: 7-day streak
-
   return (
     <div className="min-h-screen bg-black text-white p-8">
       {/* Header */}
@@ -35,34 +31,6 @@ export default function About() {
           Making investing effortless through smart round-ups on your daily transactions.
         </p>
       </div>
-
-      {/* Streak Section - Add this after the Hero section */}
-      <section className="max-w-6xl mx-auto mb-20">
-        <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-8 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-4 text-6xl animate-bounce">🔥</div>
-          <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4">Investment Streak</h2>
-            <div className="text-7xl font-bold mb-6">{streak} Days</div>
-            <p className="text-xl">
-              Keep your streak alive! Make a transaction today to maintain your investment momentum.
-            </p>
-          </div>
-          <div className="mt-8 flex justify-center gap-4">
-            <div className="bg-white/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold">₹3,450</div>
-              <div className="text-sm">Total Invested</div>
-            </div>
-            <div className="bg-white/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold">23</div>
-              <div className="text-sm">Longest Streak</div>
-            </div>
-            <div className="bg-white/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold">5</div>
-              <div className="text-sm">Transactions Today</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Mission Section */}
       <section className="max-w-6xl mx-auto mb-20">
@@ -102,34 +70,6 @@ export default function About() {
             <p className="text-gray-300">
               Once your round-ups reach ₹100, we automatically invest it in your chosen portfolio. 
               You can track your investments and round-ups in real-time.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Add a new section about Streaks after the How It Works section */}
-      <section className="max-w-6xl mx-auto mb-20">
-        <h2 className="text-4xl font-bold mb-12 text-center">Build Your Investment Streak</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-[#1C1C1C] rounded-xl p-6 hover:bg-[#2A2A2A] transition-colors duration-300">
-            <h3 className="text-2xl font-bold mb-4 text-orange-400">Daily Streaks</h3>
-            <p className="text-gray-300">
-              Every day you make a rounded-up transaction, your streak increases. Watch your streak grow 
-              as you maintain consistent investment habits.
-            </p>
-          </div>
-          <div className="bg-[#1C1C1C] rounded-xl p-6 hover:bg-[#2A2A2A] transition-colors duration-300">
-            <h3 className="text-2xl font-bold mb-4 text-orange-400">Streak Rewards</h3>
-            <p className="text-gray-300">
-              Longer streaks unlock special achievements and rewards. Hit milestones at 7 days, 
-              30 days, and 100 days to earn special badges.
-            </p>
-          </div>
-          <div className="bg-[#1C1C1C] rounded-xl p-6 hover:bg-[#2A2A2A] transition-colors duration-300">
-            <h3 className="text-2xl font-bold mb-4 text-orange-400">Streak Protection</h3>
-            <p className="text-gray-300">
-              Don't worry about breaking your streak on weekends or holidays. Our streak protection 
-              keeps your progress safe during non-transaction days.
             </p>
           </div>
         </div>

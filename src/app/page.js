@@ -45,16 +45,16 @@ export default function Home() {
           />
           <nav className="hidden md:flex items-center gap-8">
             <Link href="/about" className="text-white hover:text-purple-300 transition-colors duration-200 text-lg font-medium">
-              • About Us
+              About Us
             </Link>
             <Link href="#get-smart-articles" className="text-white hover:text-purple-300 transition-colors duration-200 text-lg font-medium">
-              • Wise Up
+              Wise Up
             </Link>
             <Link href="#faq-section" className="text-white hover:text-purple-300 transition-colors duration-200 text-lg font-medium">
-              • FAQ
+              FAQ
             </Link>
             <Link href="/contact" className="text-white hover:text-purple-300 transition-colors duration-200 text-lg font-medium">
-              • Contact Us
+              Contact Us
             </Link>
           </nav>
         </div>
