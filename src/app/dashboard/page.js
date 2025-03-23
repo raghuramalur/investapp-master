@@ -39,6 +39,10 @@ export default function Dashboard() {
   const [showGrowthGraph, setShowGrowthGraph] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null);
   const [showTimeout, setShowTimeout] = useState(null);
+  const [streak, setStreak] = useState(7);
+  const [showStreak, setShowStreak] = useState(true);
+  const [totalInvested, setTotalInvested] = useState(3450);
+  const [transactionsToday, setTransactionsToday] = useState(5);
   const router = useRouter();
 
   useEffect(() => {
@@ -54,6 +58,12 @@ export default function Dashboard() {
 
     // Generate mock data for graphs
     generateMockData();
+
+    // For prototype: Auto-hide streak after 1.5 seconds
+    const timer = setTimeout(() => {
+      setShowStreak(false);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   const generateMockData = () => {
@@ -279,6 +289,27 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-white relative">
+      {/* Streak Notification - Shows at the top */}
+      {showStreak && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm">
+          <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-lg p-2.5 shadow-2xl relative overflow-hidden flex items-center justify-center gap-2 animate-streak-fade">
+            <button 
+              onClick={() => setShowStreak(false)}
+              className="absolute -top-1 -right-1 w-6 h-6 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-lg font-bold text-white/90 hover:text-white hover:bg-black/40 transition-all"
+            >
+              ×
+            </button>
+            <div className="text-3xl animate-bounce">🔥</div>
+            <div className="text-center text-white flex items-center gap-2">
+              <span className="text-lg font-bold whitespace-nowrap">{streak} Day Streak!</span>
+              <div className="bg-white/20 rounded-md px-2 py-0.5 text-sm">
+                <span className="font-bold">{transactionsToday}</span> today
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header with Menu Icon */}
       <div className="w-full px-6 py-4">
         <div className="flex items-center justify-between">
@@ -669,6 +700,30 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        @keyframes streakFade {
+          0% {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          15% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          85% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(0);
+          }
+        }
+        .animate-streak-fade {
+          animation: streakFade 1.5s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 } 
