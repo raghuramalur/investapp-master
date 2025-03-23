@@ -8,12 +8,28 @@ import stepUpSIP from "../assets/steu-up-SIP.webp";
 import tax from "../assets/tax.webp";
 import Image from "next/image";
 import Box from "../components/Box"; // Import the Box component
+import card1 from "../assets/card1.svg";
+import card2 from "../assets/card2.svg";
+import card3 from "../assets/card3.svg";
 
 export default function Home() {
   const [expandedBox, setExpandedBox] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(1);
 
   const handleBoxClick = (box) => {
     setExpandedBox(expandedBox === box ? null : box);
+  };
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prevSlide) => (prevSlide > 1 ? prevSlide - 1 : 6));
+  };
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prevSlide) => (prevSlide < 6 ? prevSlide + 1 : 1));
+  };
+
+  const handleDotClick = (dot) => {
+    setCurrentSlide(dot);
   };
 
   return (
@@ -124,59 +140,58 @@ Whether it's as little as ₹10 or as much as ₹5000, Dimeon ensures your money
         </div>
       </div>
       <div id="get-smart-articles" className="w-full flex flex-col items-center gap-8">
-        <h1 className="text-center text-5xl font-bold font-serif text-white">Wise Up</h1>
-        <div className="w-[80vw] flex justify-between">
-          <div className="w-[22%] flex flex-col items-center">
-            <Link href="https://www.dezerv.in/mutual-funds/mutual-fund-risks/" target="_blank" rel="noopener noreferrer" className="w-full">
-              <div className="h-[50vh] w-full bg-white rounded-lg overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-300">
-                <div className="w-full h-[85%] relative">
-                  <Image
-                    src={investingImage}
-                    alt="Investing Overview"
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-                <p className="text-gray-800 text-sm p-3 text-center hover:text-purple-700 font-bold">Understanding Mutual Fund Risks</p>
-              </div>
-            </Link>
-          </div>
-          <div className="w-[22%] flex flex-col items-center">
-            <Link href="https://www.dezerv.in/mutual-funds/systematic-investment-plan/" target="_blank" rel="noopener noreferrer" className="w-full">
-              <div className="h-[50vh] w-full bg-white rounded-lg overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-300">
-                <div className="w-full h-[85%] relative">
-                  <Image
-                    src={stepUpSIP}
-                    alt="Micro Investing Guide"
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-                <p className="text-gray-800 text-sm p-3 text-center hover:text-purple-700 font-bold">Guide to Micro Investing</p>
-              </div>
-            </Link>
-          </div>
-          <div className="w-[22%] flex flex-col items-center">
-            <Link href="https://www.dezerv.in/mutual-funds/mutual-fund-taxation/" target="_blank" rel="noopener noreferrer" className="w-full">
-              <div className="h-[50vh] w-full bg-white rounded-lg overflow-hidden flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-300">
-                <div className="w-full h-[85%] relative">
-                  <Image
-                    src={tax}
-                    alt="Tax Benefits"
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-                <p className="text-gray-800 text-sm p-3 text-center hover:text-purple-700 font-bold">Tax Benefits of Investing</p>
-              </div>
-            </Link>
-          </div>
+        <h1 className="text-center text-5xl font-bold font-serif text-white mb-12">Wise Up</h1>
+        <div className="w-[90vw] max-w-[1400px] flex justify-center gap-6">
+          {/* Card 1 */}
+          <Link 
+            href="https://zerodha.com/varsity/module/introduction-to-stock-markets/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-[400px] h-[300px] rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
+          >
+            <Image
+              src={card1}
+              alt="Card 1"
+              width={400}
+              height={300}
+              priority
+              className="w-full h-full"
+            />
+          </Link>
+
+          {/* Card 2 */}
+          <Link 
+            href="https://zerodha.com/varsity/module/technical-analysis/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-[400px] h-[300px] rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
+          >
+            <Image
+              src={card2}
+              alt="Card 2"
+              width={400}
+              height={300}
+              priority
+              className="w-full h-full"
+            />
+          </Link>
+
+          {/* Card 3 */}
+          <Link 
+            href="https://zerodha.com/varsity/module/fundamental-analysis/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="w-[400px] h-[300px] rounded-xl overflow-hidden transition-transform duration-300 hover:scale-105"
+          >
+            <Image
+              src={card3}
+              alt="Card 3"
+              width={400}
+              height={300}
+              priority
+              className="w-full h-full"
+            />
+          </Link>
         </div>
       </div>
       <div id="faq-section" className="w-full flex flex-col items-center gap-8">
