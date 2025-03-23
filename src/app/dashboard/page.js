@@ -39,10 +39,40 @@ export default function Dashboard() {
   const [showGrowthGraph, setShowGrowthGraph] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState(null);
   const [showTimeout, setShowTimeout] = useState(null);
-  const [streak, setStreak] = useState(7);
-  const [showStreak, setShowStreak] = useState(true);
-  const [totalInvested, setTotalInvested] = useState(3450);
-  const [transactionsToday, setTransactionsToday] = useState(5);
+  const [streak, setStreak] = useState(40);
+  const [totalSolved, setTotalSolved] = useState(158);
+  const [totalAvailable, setTotalAvailable] = useState(3491);
+  const [showStreakDetails, setShowStreakDetails] = useState(false);
+  const [installDate, setInstallDate] = useState(null);
+  const [activeInvestmentDays, setActiveInvestmentDays] = useState(52);
+  const [maxStreak, setMaxStreak] = useState(40);
+  const [badges, setBadges] = useState([
+    {
+      id: 1,
+      name: '50 Days Badge 2024',
+      icon: (
+        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="#FFD700"/>
+          <path fillRule="evenodd" clipRule="evenodd" d="M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3ZM12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18Z" fill="#FFD700"/>
+        </svg>
+      ),
+      isRecent: true,
+      earnedDate: '2024-03-15',
+      color: '#FFD700'
+    },
+    {
+      id: 2,
+      name: 'Early Investor',
+      icon: (
+        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#00B8A3"/>
+        </svg>
+      ),
+      isRecent: false,
+      earnedDate: '2024-03-01',
+      color: '#00B8A3'
+    }
+  ]);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,18 +82,22 @@ export default function Dashboard() {
     setUserName(storedName);
     setXp(userXp);
 
+    // Set install date if not already set
+    const storedInstallDate = localStorage.getItem('installDate');
+    if (!storedInstallDate) {
+      const currentDate = new Date().toISOString();
+      localStorage.setItem('installDate', currentDate);
+      setInstallDate(new Date(currentDate));
+    } else {
+      setInstallDate(new Date(storedInstallDate));
+    }
+
     // Check if UPI setup is complete
     const upiSetupComplete = localStorage.getItem('upiSetupComplete') === 'true';
     setIsUPISetup(upiSetupComplete);
 
     // Generate mock data for graphs
     generateMockData();
-
-    // For prototype: Auto-hide streak after 1.5 seconds
-    const timer = setTimeout(() => {
-      setShowStreak(false);
-    }, 1500);
-    return () => clearTimeout(timer);
   }, []);
 
   const generateMockData = () => {
@@ -290,11 +324,11 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#121212] text-white relative">
       {/* Streak Notification - Shows at the top */}
-      {showStreak && (
+      {showStreakDetails && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm">
           <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-lg p-2.5 shadow-2xl relative overflow-hidden flex items-center justify-center gap-2 animate-streak-fade">
             <button 
-              onClick={() => setShowStreak(false)}
+              onClick={() => setShowStreakDetails(false)}
               className="absolute -top-1 -right-1 w-6 h-6 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-lg font-bold text-white/90 hover:text-white hover:bg-black/40 transition-all"
             >
               ×
@@ -303,7 +337,7 @@ export default function Dashboard() {
             <div className="text-center text-white flex items-center gap-2">
               <span className="text-lg font-bold whitespace-nowrap">{streak} Day Streak!</span>
               <div className="bg-white/20 rounded-md px-2 py-0.5 text-sm">
-                <span className="font-bold">{transactionsToday}</span> today
+                <span className="font-bold">{totalSolved}/{totalAvailable}</span>
               </div>
             </div>
           </div>
@@ -336,104 +370,143 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          <button 
-            onClick={() => setShowMenu(true)}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors duration-200"
-          >
-            <span className="text-xl">☰</span>
-          </button>
+          <div className="flex items-center gap-4">
+            {/* Remove Badges Preview and keep only menu button */}
+            <button 
+              onClick={() => setShowMenu(true)}
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors duration-200"
+            >
+              <span className="text-xl">☰</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Profile Details Modal */}
       {showProfile && (
         <>
-          {/* Overlay */}
           <div 
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={() => setShowProfile(false)}
           />
           
-          {/* Profile Modal */}
-          <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-[#1A1A1A] rounded-2xl z-50 overflow-hidden">
-            {/* Profile Header */}
-            <div className="relative h-32 bg-gradient-to-r from-purple-500 to-blue-500">
-              <button 
-                onClick={() => setShowProfile(false)}
-                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 transition-all duration-200"
-              >
-                ×
-              </button>
-            </div>
-
-            {/* Profile Avatar */}
-            <div className="relative -mt-12 px-6">
-              <div className="w-24 h-24 bg-[#2A2A2A] rounded-full flex items-center justify-center text-3xl font-medium border-4 border-[#1A1A1A]">
-                {userName ? userName[0].toUpperCase() : 'U'}
-              </div>
-            </div>
-
-            {/* Profile Content */}
-            <div className="p-6">
-              <h2 className="text-2xl font-bold mb-1">{userName}</h2>
-              <p className="text-gray-400 mb-6">Member since March 2024</p>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-[#2A2A2A] rounded-xl p-4 text-center">
-                  <div className="text-yellow-400 text-xl font-bold mb-1">{xp.toLocaleString()}</div>
-                  <div className="text-xs text-gray-400">XP Points</div>
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="w-full max-w-5xl h-[90vh] bg-[#1A1A1A] rounded-2xl overflow-hidden flex flex-col md:flex-row">
+              {/* Left Column - Header and Basic Info */}
+              <div className="w-full md:w-[320px] relative">
+                {/* Profile Header */}
+                <div className="h-32 bg-gradient-to-r from-purple-500 to-blue-500">
+                  <button 
+                    onClick={() => setShowProfile(false)}
+                    className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black bg-opacity-30 text-white hover:bg-opacity-40 transition-all duration-200"
+                  >
+                    ×
+                  </button>
                 </div>
-                <div className="bg-[#2A2A2A] rounded-xl p-4 text-center">
-                  <div className="text-purple-400 text-xl font-bold mb-1">{Math.floor(xp/1000) + 1}</div>
-                  <div className="text-xs text-gray-400">Level</div>
-                </div>
-                <div className="bg-[#2A2A2A] rounded-xl p-4 text-center">
-                  <div className="text-green-400 text-xl font-bold mb-1">156</div>
-                  <div className="text-xs text-gray-400">Investments</div>
-                </div>
-              </div>
 
-              {/* Progress to Next Level */}
-              <div className="mb-6">
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-400">Progress to Level {Math.floor(xp/1000) + 2}</span>
-                  <span className="text-gray-400">{xp % 1000}/1000 XP</span>
+                {/* Profile Avatar */}
+                <div className="relative -mt-12 px-6">
+                  <div className="w-24 h-24 bg-[#2A2A2A] rounded-full flex items-center justify-center text-3xl font-medium border-4 border-[#1A1A1A]">
+                    {userName ? userName[0].toUpperCase() : 'U'}
+                  </div>
                 </div>
-                <div className="h-2 bg-[#2A2A2A] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full"
-                    style={{ width: `${(xp % 1000) / 10}%` }}
-                  />
+
+                {/* Basic Info */}
+                <div className="p-6">
+                  <h2 className="text-2xl font-bold mb-1">{userName}</h2>
+                  <p className="text-gray-400 mb-6">Member since March 2024</p>
+
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-[#2A2A2A] rounded-xl p-3 text-center">
+                      <div className="text-yellow-400 text-lg font-bold mb-1">{xp.toLocaleString()}</div>
+                      <div className="text-xs text-gray-400">XP Points</div>
+                    </div>
+                    <div className="bg-[#2A2A2A] rounded-xl p-3 text-center">
+                      <div className="text-purple-400 text-lg font-bold mb-1">{Math.floor(xp/1000) + 1}</div>
+                      <div className="text-xs text-gray-400">Level</div>
+                    </div>
+                    <div className="bg-[#2A2A2A] rounded-xl p-3 text-center">
+                      <div className="text-green-400 text-lg font-bold mb-1">156</div>
+                      <div className="text-xs text-gray-400">Investments</div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Account Details */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="text-gray-400">UPI ID</div>
-                  <div>{localStorage.getItem('upiId') || 'Not set up'}</div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Phone</div>
-                  <div>{localStorage.getItem('phoneNumber') || 'Not available'}</div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Email</div>
-                  <div>{localStorage.getItem('email') || 'Not available'}</div>
+              {/* Right Column - Scrollable Content */}
+              <div className="flex-1 overflow-y-auto border-t md:border-t-0 md:border-l border-[#2A2A2A]">
+                <div className="p-6">
+                  {/* Badges Section */}
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium">Badges</h3>
+                      <span className="text-gray-400 text-sm">{badges.length} earned</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {badges.map(badge => (
+                        <div key={badge.id} className="flex items-center gap-3 bg-[#2A2A2A] rounded-xl p-4">
+                          <div className="flex-shrink-0 w-12 h-12 bg-[#1E1E1E] rounded-full flex items-center justify-center">
+                            {badge.icon}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="font-medium truncate">{badge.name}</div>
+                            <div className="text-sm text-gray-400">
+                              Earned {new Date(badge.earnedDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                            </div>
+                          </div>
+                          {badge.isRecent && (
+                            <div className="flex-shrink-0 px-2 py-1 bg-[#4A4A8A] text-xs rounded-full">
+                              Recent
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Progress to Next Level */}
+                  <div className="mb-6">
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-gray-400">Progress to Level {Math.floor(xp/1000) + 2}</span>
+                      <span className="text-gray-400">{xp % 1000}/1000 XP</span>
+                    </div>
+                    <div className="h-2 bg-[#2A2A2A] rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full transition-all duration-300"
+                        style={{ width: `${(xp % 1000) / 10}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Account Details */}
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center py-3 border-b border-[#2A2A2A]">
+                      <div className="text-gray-400">UPI ID</div>
+                      <div>{localStorage.getItem('upiId') || 'Not set up'}</div>
+                    </div>
+                    <div className="flex justify-between items-center py-3 border-b border-[#2A2A2A]">
+                      <div className="text-gray-400">Phone</div>
+                      <div>{localStorage.getItem('phoneNumber') || 'Not available'}</div>
+                    </div>
+                    <div className="flex justify-between items-center py-3 border-b border-[#2A2A2A]">
+                      <div className="text-gray-400">Email</div>
+                      <div>{localStorage.getItem('email') || 'Not available'}</div>
+                    </div>
+                  </div>
+
+                  {/* Edit Profile Button */}
+                  <button 
+                    onClick={() => {
+                      setShowProfile(false);
+                      router.push('/settings');
+                    }}
+                    className="w-full mt-6 bg-[#2A2A2A] text-white py-3 rounded-xl font-medium hover:bg-[#3A3A3A] transition-all duration-200"
+                  >
+                    Edit Profile
+                  </button>
                 </div>
               </div>
-
-              {/* Edit Profile Button */}
-              <button 
-                onClick={() => {
-                  setShowProfile(false);
-                  router.push('/settings');
-                }}
-                className="w-full mt-6 bg-[#2A2A2A] text-white py-3 rounded-xl font-medium hover:bg-[#3A3A3A] transition-all duration-200"
-              >
-                Edit Profile
-              </button>
             </div>
           </div>
         </>
@@ -495,23 +568,50 @@ export default function Dashboard() {
       )}
 
       {/* Main Dashboard Content */}
-      <div className="max-w-2xl mx-auto px-6 py-8">
-        {/* Investment Summary Card */}
-        <div className="bg-[#4A4A8A] rounded-2xl p-8 mb-8 grid grid-cols-2 gap-8">
-          <div>
-            <div className="text-gray-300 mb-2">Invested</div>
-            <div className="text-3xl font-bold">₹12,450</div>
+      <div className="max-w-6xl mx-auto px-6 py-4">
+        {/* Investment Summary Cards Row */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8">
+          {/* Investment Summary Card */}
+          <div className="md:col-span-7 bg-[#4A4A8A] rounded-2xl p-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <div className="text-gray-300 mb-2">Invested</div>
+                <div className="text-3xl font-bold">₹12,450</div>
+              </div>
+              <div>
+                <div className="text-gray-300 mb-2">Current Value</div>
+                <div className="text-3xl font-bold">₹13,280</div>
+              </div>
+            </div>
           </div>
-          <div>
-            <div className="text-gray-300 mb-2">Current Value</div>
-            <div className="text-3xl font-bold">₹13,280</div>
+
+          {/* Streak Display Card */}
+          <div 
+            className="md:col-span-5 bg-[#1E1E1E] rounded-2xl p-6 cursor-pointer hover:bg-[#252525] transition-colors duration-200"
+            onClick={() => setShowStreakDetails(!showStreakDetails)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="text-3xl">🔥</div>
+                <div>
+                  <div className="text-xl font-bold">{streak} Day Streak</div>
+                  <div className="text-gray-400 text-sm mt-1">
+                    {totalSolved}/{totalAvailable} Invested
+                  </div>
+                </div>
+              </div>
+              <div className="text-gray-400 text-sm text-right">
+                <div>Active days: {activeInvestmentDays}</div>
+                <div>Max streak: {maxStreak}</div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Fund Details Card */}
         <div className="bg-[#1E1E1E] rounded-2xl overflow-hidden mb-8">
           {/* Fund Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 p-6">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-6 p-6">
             <div>
               <div className="text-gray-400 text-sm mb-1">Folio No.</div>
               <div>DM123456</div>
@@ -527,16 +627,6 @@ export default function Dashboard() {
             <div>
               <div 
                 onClick={() => setShowPandLGraph(true)}
-                onMouseEnter={() => {
-                  clearTimeout(hoverTimeout);
-                  const timeout = setTimeout(() => setShowPandLGraph(true), 1000);
-                  setShowTimeout(timeout);
-                }}
-                onMouseLeave={() => {
-                  if (!showPandLGraph) {
-                    clearTimeout(showTimeout);
-                  }
-                }}
                 className="w-full text-left hover:opacity-80 transition-opacity duration-200 cursor-pointer relative"
               >
                 <div className="text-gray-400 text-sm mb-1">P and L</div>
@@ -546,16 +636,6 @@ export default function Dashboard() {
             <div>
               <div 
                 onClick={() => setShowGrowthGraph(true)}
-                onMouseEnter={() => {
-                  clearTimeout(hoverTimeout);
-                  const timeout = setTimeout(() => setShowGrowthGraph(true), 1000);
-                  setShowTimeout(timeout);
-                }}
-                onMouseLeave={() => {
-                  if (!showGrowthGraph) {
-                    clearTimeout(showTimeout);
-                  }
-                }}
                 className="w-full text-left hover:opacity-80 transition-opacity duration-200 cursor-pointer relative"
               >
                 <div className="text-gray-400 text-sm mb-1">Growth Rate</div>
@@ -569,27 +649,48 @@ export default function Dashboard() {
           </div>
 
           {/* Investment Methods */}
-          <div className="bg-[#161616] p-6 space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-[#2A2A2A] rounded-full flex items-center justify-center text-purple-400">↑</div>
-              <div>
-                <div className="text-sm">Via Round-Ups</div>
-                <div className="text-gray-400 text-sm">₹8,450 from 156 spends</div>
+          <div className="bg-[#161616] p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-[#2A2A2A] rounded-full flex items-center justify-center text-purple-400">↑</div>
+                <div>
+                  <div className="text-sm">Via Round-Ups</div>
+                  <div className="text-gray-400 text-sm">₹8,450 from 156 spends</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-[#2A2A2A] rounded-full flex items-center justify-center text-red-400">⚠️</div>
+                <div>
+                  <div className="text-sm">Total Defaulted Payments</div>
+                  <div className="text-gray-400 text-sm">₹240 from 3 transactions</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-[#2A2A2A] rounded-full flex items-center justify-center text-teal-400">💼</div>
+                <div>
+                  <div className="text-sm">Via Lump-Sum</div>
+                  <div className="text-gray-400 text-sm">₹4,000</div>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-[#2A2A2A] rounded-full flex items-center justify-center text-red-400">⚠️</div>
-              <div>
-                <div className="text-sm">Total Defaulted Payments</div>
-                <div className="text-gray-400 text-sm">₹240 from 3 transactions</div>
-              </div>
+          </div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* P&L Chart */}
+          <div className="bg-[#1E1E1E] rounded-2xl p-6">
+            <h2 className="text-xl font-medium mb-6">Investment Returns</h2>
+            <div className="h-64 relative">
+              <Line data={returnsChartData} options={chartOptions} />
             </div>
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-[#2A2A2A] rounded-full flex items-center justify-center text-teal-400">💼</div>
-              <div>
-                <div className="text-sm">Via Lump-Sum</div>
-                <div className="text-gray-400 text-sm">₹4,000</div>
-              </div>
+          </div>
+
+          {/* Growth Chart */}
+          <div className="bg-[#1E1E1E] rounded-2xl p-6">
+            <h2 className="text-xl font-medium mb-6">Investment Growth</h2>
+            <div className="h-64 relative">
+              <Line data={investmentChartData} options={chartOptions} />
             </div>
           </div>
         </div>
@@ -689,14 +790,23 @@ export default function Dashboard() {
 
       {/* Complete Activation Button - Only show if UPI is not set up */}
       {!isUPISetup && (
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#121212] to-transparent">
-          <div className="max-w-2xl mx-auto">
-            <button 
-              onClick={() => router.push('/activation')}
-              className="w-full bg-[#4A4A8A] text-white py-4 rounded-xl text-xl font-medium hover:bg-[#5A5A9A] transition-all duration-200"
-            >
-              Complete Activation
-            </button>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-lg px-4">
+          <div className="bg-[#4A4A8A] rounded-2xl p-4 shadow-2xl backdrop-blur-lg border border-white/10">
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-medium mb-1">Complete Your Setup</h3>
+                <p className="text-sm text-gray-300">Link your UPI ID to start investing</p>
+              </div>
+              <button 
+                onClick={() => router.push('/activation')}
+                className="bg-white text-[#4A4A8A] px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-gray-100 transition-all duration-200 flex items-center gap-2"
+              >
+                Activate Now
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 4L10.59 5.41L16.17 11H4V13H16.17L10.59 18.59L12 20L20 12L12 4Z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       )}
